@@ -1,8 +1,11 @@
 package pobj.pinboard.editor.tools;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import pobj.pinboard.document.Board;
+import pobj.pinboard.document.ClipEllipse;
 import pobj.pinboard.document.ClipRect;
 import pobj.pinboard.editor.EditorInterface;
 
@@ -27,8 +30,8 @@ public class ToolEllipse implements Tool
 	@Override
 	public void press(EditorInterface i, MouseEvent e) 
 	{
-		double x1_press=e.getX();
-		double y1_press=e.getY();
+		x1_press=e.getX();
+		y1_press=e.getY();
 		
 	}
 
@@ -43,7 +46,11 @@ public class ToolEllipse implements Tool
 	{
 		double x2_release=e.getX();
 		double y2_release=e.getY();
-		i.getBoard().addClip(new ClipRect(x1_press, y1_press, x2_release, y2_release, Color.RED));
+		//System.out.println(x1_press);
+		//System.out.println(y1_press);
+		//System.out.println(x2_release);
+		//System.out.println(y2_release);
+		i.getBoard().addClip(new ClipEllipse(x1_press, y1_press, x2_release, y2_release, Color.RED));
 	}
 
 	@Override

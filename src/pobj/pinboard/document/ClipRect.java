@@ -7,10 +7,20 @@ public class ClipRect extends AbstractClip implements Clip
 {
 	public ClipRect(double left, double top, double right, double bottom, Color color)
 	{
-		this.setLeft(left);
-		this.setTop(top);
-		this.setRight(right);
-		this.setBottom(bottom);
+		if ((left > right) && (top>bottom))
+		{
+			this.setLeft(right);
+			this.setTop(bottom);
+			this.setRight(left);
+			this.setBottom(top);
+		}
+		else
+		{
+			this.setLeft(left);
+			this.setTop(top);
+			this.setRight(right);
+			this.setBottom(bottom);
+		}
 		this.setColor(color);
 	}
 	

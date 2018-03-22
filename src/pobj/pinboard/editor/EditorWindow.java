@@ -4,6 +4,8 @@ import pobj.pinboard.document.Board;
 import pobj.pinboard.document.ClipEllipse;
 import pobj.pinboard.document.ClipRect;
 import pobj.pinboard.editor.tools.Tool;
+import pobj.pinboard.editor.tools.ToolEllipse;
+import pobj.pinboard.editor.tools.ToolRect;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -34,26 +36,57 @@ public class EditorWindow implements EditorInterface
 		ToolBar tb= new ToolBar(box,ellipse,img);
 		Canvas canvas = new Canvas(500, 500);
 		Separator sep= new Separator();
-		Label bds= new Label(tool.getName(this));
+		Label bds= new Label("");
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(mb,tb,canvas,sep,bds);
 		stage.setScene(new javafx.scene.Scene(vbox));
-	
-		
 		
 		nouveau.setOnAction((e)-> { new EditorWindow(new Stage()); });
 		close.setOnAction((e)-> { stage.close(); });
 		
-		canvas.setOnMousePressed((e)-> { press(e); });
-		canvas.setOnMouseDragged((e)-> { drag(e); });
-		canvas.setOnMouseReleased((e)-> { release(this,e); });
+		box.setOnAction((e)-> 
+		{
+			tool=new ToolRect();
+			String name=tool.getName(this);
+			Label bds2= new Label(name);
+			VBox vbox1 = new VBox();
+			vbox1.getChildren().addAll(mb,tb,canvas,sep,bds2);
+			stage.setScene(new javafx.scene.Scene(vbox1));
+		}
+		);
+		ellipse.setOnAction((e)-> 
+		{ 
+			tool=new ToolEllipse();
+			String name1=tool.getName(this);
+			Label bds3= new Label(name1);
+			VBox vbox2 = new VBox();
+			vbox2.getChildren().addAll(mb,tb,canvas,sep,bds3);
+			stage.setScene(new javafx.scene.Scene(vbox2));
+		}
+		);
 		
-			
+		canvas.setOnMousePressed((e)->
+		{
+			press(e);
+		}
+		);
+		canvas.setOnMouseDragged((e)-> 
+		{ 
+			drag(e);
+			board.draw(canvas.getGraphicsContext2D());
+		});
+		canvas.setOnMouseReleased((e)-> 
+		{ 
+			release(this,e); 
+			board.draw(canvas.getGraphicsContext2D());
+		}
+		);
 		
+		//board.addClip(new ClipEllipse(161, 268, 381, 453, Color.BLACK));
 		//board.addClip(new ClipRect(200, 50, 300, 250, Color.BLACK));
 		//board.addClip(new ClipEllipse(100, 150, 250, 270, Color.BLACK));
-		
-		board.draw(canvas.getGraphicsContext2D());
+		//board.draw(canvas.getGraphicsContext2D());
+		//stage.setScene(new javafx.scene.Scene(vbox));
 		stage.show();
 	}
 	
@@ -74,7 +107,7 @@ public class EditorWindow implements EditorInterface
 
 	@Override
 	public Board getBoard() {
-		return board;
+		return this.board;
 	}
 	
 	
