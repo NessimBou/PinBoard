@@ -34,5 +34,13 @@ public class ClipEllipse extends AbstractClip implements Clip
 		double cy = (this.getTop()+this.getBottom())/2;
 		double rx = (this.getRight()-this.getLeft())/2;
 		double ry = (this.getBottom()-this.getTop())/2;
+		
+		double r1 = (x-cx)/(rx);
+		double r2 = (y-cy)/(ry);
+		double r12=r1*r1;
+		double r22=r2*r2;
+		if (r12+r22<=1)
+			return true;
+		return false;
 	}
 }

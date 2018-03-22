@@ -18,7 +18,7 @@ public class ToolEllipseTest extends ToolTest {
 	
 	private EditorInterface editor = new MockEditor();
 	private Tool tool = new ToolEllipse();
-
+	
 	@Test
 	public void testCreate() {
 		assertTrue(editor.getBoard().getContents().isEmpty());
