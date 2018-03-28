@@ -15,6 +15,7 @@ public class TestDocument extends javafx.application.Application {
 		board.addClip(new ClipRect(100, 100, 300, 200, Color.BLUE));
 		board.addClip(new ClipEllipse(200, 150, 400, 250, Color.RED));
 		board.draw(canvas.getGraphicsContext2D());
+		System.out.println(board.getContents().get(0).getColor());
 		stage.show();
 	}
 	public static void main(String[] args) { launch(args); }

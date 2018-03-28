@@ -4,9 +4,9 @@ import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pobj.pinboard.document.Board;
-//import pobj.pinboard.editor.CommandStack;
+import pobj.pinboard.editor.CommandStack;
 import pobj.pinboard.editor.EditorInterface;
-//import pobj.pinboard.editor.Selection;
+import pobj.pinboard.editor.Selection;
 
 // Helper class for ToolRectTest & ToolEllipseTest
 
