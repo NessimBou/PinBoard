@@ -1,4 +1,4 @@
-package pobj.pinboard.editor.tools.test;
+ package pobj.pinboard.editor.tools.test;
 
 import static org.junit.Assert.*;
 
