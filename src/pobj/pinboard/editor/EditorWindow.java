@@ -1,114 +1,138 @@
 package pobj.pinboard.editor;
 
-import pobj.pinboard.document.Board;
-import pobj.pinboard.document.ClipEllipse;
-import pobj.pinboard.document.ClipRect;
-import pobj.pinboard.editor.tools.Tool;
-import pobj.pinboard.editor.tools.ToolEllipse;
-import pobj.pinboard.editor.tools.ToolRect;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pobj.pinboard.document.Board;
+import pobj.pinboard.editor.tools.Tool;
+import pobj.pinboard.editor.tools.ToolEllipse;
+import pobj.pinboard.editor.tools.ToolRect;
 
-public class EditorWindow implements EditorInterface
-{
+public class EditorWindow implements EditorInterface {
+
 	private Board board;
 	private Tool tool;
+	//Zone de dessin
+	private final Canvas canvas = new Canvas(800,400);
 	
-	public EditorWindow(Stage stage) 
-	{
-		this.board=new Board();
+	public EditorWindow(Stage stage){
+		board = new Board();
+
 		
-		Menu file=new Menu ("File");
-		Menu edit=new Menu ("Edit");
-		Menu tools=new Menu ("Tools");
-		Button box=new Button ("Box");
-		Button ellipse=new Button ("Ellipse");
-		Button img=new Button ("Img...");
-		MenuItem nouveau= new MenuItem("New");
-		MenuItem close= new MenuItem("Close");
-		file.getItems().addAll(nouveau,close);
+		//Liste des menus et sous-menu
+		Menu file = new Menu("File");
 		
-		MenuBar mb=new MenuBar(file,edit,tools);
-		ToolBar tb= new ToolBar(box,ellipse,img);
-		Canvas canvas = new Canvas(500, 500);
-		Separator sep= new Separator();
-		Label bds= new Label("");
+		MenuItem nouveau = new MenuItem("New");
+		MenuItem fermer = new MenuItem("Close");
+		
+		
+		file.getItems().addAll(nouveau,fermer);
+		
+		
+		Menu Edit = new Menu("Edit");
+		
+		MenuItem rectangle = new MenuItem("Rectangle");
+		MenuItem Ellipse = new MenuItem("Ellipse");
+		
+		Edit.getItems().addAll(rectangle,Ellipse);
+		
+		
+		Menu tools = new Menu("Tools");
+		
+		//Barre de menu
+		MenuBar menubar = new MenuBar(file,Edit,tools);
+		
+		//Liste des boutons
+		Button box = new Button("box");
+		Button ellipse = new Button("Ellipse");
+		Button img = new Button("Img");
+		
+		
+		//Barre de Bouton
+		ToolBar toolbar = new ToolBar(box,ellipse,img);
+		
+		
+		
+		//Separator
+		Separator separator = new Separator();
+		
+		//Label
+		Label label = new Label();
+		
+		//Fonction Annonyme
+		nouveau.setOnAction((e) -> { new EditorWindow(new Stage());});
+		fermer.setOnAction((e) -> { stage.close();});
+		ellipse.setOnAction((e) -> { tool = new ToolEllipse();});
+		box.setOnAction((e) -> {tool = new ToolRect();});
+		rectangle.setOnAction((e) -> {tool = new ToolRect();});
+		Ellipse.setOnAction((e) -> { tool = new ToolEllipse();});
+		
+		
+		EventHandler<MouseEvent> drag=new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				tool.drag(EditorWindow.this, e);
+	            draw(canvas.getGraphicsContext2D());
+		   }
+		};
+	       
+	    EventHandler<MouseEvent> press=new EventHandler<MouseEvent>() {
+	    	@Override
+	    	public void handle(MouseEvent e) {
+	  		   tool.press(EditorWindow.this, e);
+	  	       }
+	    };
+	    
+	    EventHandler<MouseEvent> released= new EventHandler<MouseEvent>() {
+	           @Override
+	           public void handle(MouseEvent e) {
+	        	   tool.release(EditorWindow.this, e);
+	        	   board.draw(canvas.getGraphicsContext2D());
+	           }
+	    };
+//		
+//		canvas.setOnMousePressed(press);
+//		canvas.setOnMouseDragged(drag);
+//		canvas.setOnMouseReleased(released);
+//		
+	    
+	    canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,drag);
+	    canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, press);
+	    canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, released);
+	    
+	    
+	    
+		stage.setTitle("Titre");
 		VBox vbox = new VBox();
-		vbox.getChildren().addAll(mb,tb,canvas,sep,bds);
-		stage.setScene(new javafx.scene.Scene(vbox));
-		
-		nouveau.setOnAction((e)-> { new EditorWindow(new Stage()); });
-		close.setOnAction((e)-> { stage.close(); });
-		
-		box.setOnAction((e)-> 
-		{
-			tool=new ToolRect();
-			String name=tool.getName(this);
-			Label bds2= new Label(name);
-			VBox vbox1 = new VBox();
-			vbox1.getChildren().addAll(mb,tb,canvas,sep,bds2);
-			stage.setScene(new javafx.scene.Scene(vbox1));
-		}
-		);
-		ellipse.setOnAction((e)-> 
-		{ 
-			tool=new ToolEllipse();
-			String name1=tool.getName(this);
-			Label bds3= new Label(name1);
-			VBox vbox2 = new VBox();
-			vbox2.getChildren().addAll(mb,tb,canvas,sep,bds3);
-			stage.setScene(new javafx.scene.Scene(vbox2));
-		}
-		);
-		
-		canvas.setOnMousePressed((e)->
-		{
-			press(e);
-		}
-		);
-		canvas.setOnMouseDragged((e)-> 
-		{ 
-			drag(e);
-			board.draw(canvas.getGraphicsContext2D());
-		});
-		canvas.setOnMouseReleased((e)-> 
-		{ 
-			release(this,e); 
-			board.draw(canvas.getGraphicsContext2D());
-		}
-		);
-		
-		//board.addClip(new ClipEllipse(161, 268, 381, 453, Color.BLACK));
-		//board.addClip(new ClipRect(200, 50, 300, 250, Color.BLACK));
-		//board.addClip(new ClipEllipse(100, 150, 250, 270, Color.BLACK));
-		//board.draw(canvas.getGraphicsContext2D());
-		//stage.setScene(new javafx.scene.Scene(vbox));
+		vbox.getChildren().addAll(menubar,toolbar,canvas,separator,label);
+		Scene scene = new Scene(vbox);
+		stage.setScene(scene);
 		stage.show();
+	
+	
+		
 	}
 	
-	public void press (MouseEvent e)
-	{
-		tool.press(this, e);
-	}
-	
-	public void drag (MouseEvent e)
-	{
-		tool.drag(this, e);
-	}
-	
-	public void release(EditorInterface i, MouseEvent e)
-	{
-		tool.release(i, e);
+	public Tool getTool(){
+		return tool;
 	}
 
 	@Override
 	public Board getBoard() {
-		return this.board;
+		
+		return board;
 	}
 	
-	
+	public void draw(GraphicsContext gc){
+		gc = canvas.getGraphicsContext2D();
+		board.draw(gc);
+		tool.drawFeedback(this, gc);
+	}
+
 }

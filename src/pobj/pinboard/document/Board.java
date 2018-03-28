@@ -6,44 +6,45 @@ import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Board
-{
-	private List<Clip> l;
+public class Board {
+
+	private List<Clip> list;
 	
-	public Board()
-	{
-		l=new ArrayList<Clip>();
-	}
-	public List<Clip> getContents()
-	{
-		return l;
+	public Board(){
+		list = new ArrayList<Clip>();
 	}
 	
-	public void addClip(Clip clip)
-	{
-		l.add(clip);
+	public List<Clip> getContents(){
+		return list;
 	}
 	
-	public void addClip(List<Clip> clip)
-	{
-		l.addAll(clip);
+	public void addClip(Clip clip){
+		list.add(clip);
 	}
 	
-	public void removeClip(Clip clip)
-	{
-		l.remove(clip);
+	public void addClip(List<Clip> clip){
+//		for(Clip e : clip){
+//			addClip(e);
+//		}
+		list.addAll(clip);
 	}
-	public void removeClip(List<Clip> clip)
-	{
-		l.removeAll(clip);
+	
+	public void removeClip(Clip clip ){
+		list.remove(clip);
 	}
-	public void draw(GraphicsContext gc)
-	{
-		ClipRect rectblanc=new ClipRect(0, 0,gc.getCanvas().getHeight(),gc.getCanvas().getWidth() , Color.WHITE);
-		rectblanc.draw(gc);
-		for (Clip c : l)
-		{
-			c.draw(gc);
+	
+	public void removeClip(List<Clip> clip){
+//		for(Clip e : clip){
+//			removeClip(e);
+//		}
+		list.removeAll(clip);
+	}
+	
+	public void draw(GraphicsContext ctx){
+		ClipRect rectblanc=new ClipRect(0, 0,ctx.getCanvas().getWidth(),ctx.getCanvas().getHeight() , Color.WHITE);
+		rectblanc.draw(ctx);
+		for (Clip c : list){
+			c.draw(ctx);
 		}
 	}
 }
