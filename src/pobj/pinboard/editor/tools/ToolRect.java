@@ -76,6 +76,6 @@ public class ToolRect implements Tool {
 	
 	public double getYRelease(){
 		return y_release;
-	}
+	}	
 
 }
