@@ -32,7 +32,6 @@ public class ToolRect implements Tool {
 	public void drag(EditorInterface i, MouseEvent e) {
 		y_release = e.getY();
 		x_release = e.getX();
-		
 	}
 
 	@Override
