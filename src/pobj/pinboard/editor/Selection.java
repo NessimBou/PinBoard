@@ -20,6 +20,9 @@ public class Selection {
 				break;
 			}
 		}
+
+	
+	
 	}
 	
 	public void toogleSelect(Board board, double x,double y){
