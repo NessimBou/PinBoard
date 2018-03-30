@@ -8,10 +8,10 @@ import pobj.pinboard.editor.EditorInterface;
 
 public class ToolRect implements Tool {
 	
-	private double x_press ;
-	private double y_press  ;
-	private double x_release ; 
-	private double y_release ;
+	private double x_press;
+	private double y_press;
+	private double x_release; 
+	private double y_release;
 	private String name;
 	
 	public ToolRect(){
@@ -32,6 +32,7 @@ public class ToolRect implements Tool {
 	public void drag(EditorInterface i, MouseEvent e) {
 		y_release = e.getY();
 		x_release = e.getX();
+		
 	}
 
 	@Override
@@ -46,13 +47,18 @@ public class ToolRect implements Tool {
 	@Override
 	public void drawFeedback(EditorInterface i, GraphicsContext gc) {
 		gc.setStroke(Color.BLACK);
-		if(x_press > x_release || y_press > y_release){
-			gc.strokeRect(x_release,y_release,x_press,y_press);
-
-		}else{
-			gc.strokeRect(x_press,y_press,(x_release - x_press),(y_release- y_press));
-		}
 		
+		if (x_press > x_release && y_press > y_release)
+			gc.strokeRect(x_release,y_release,x_press-x_release,y_press-y_release);	 //OK
+		
+		if (x_press > x_release && y_press < y_release)
+			gc.strokeRect(x_release,y_press,x_press-x_release,y_release-y_press);	 //OK
+		
+		if(x_press < x_release && y_press > y_release)
+			gc.strokeRect(x_press,y_release,x_release-x_press,y_press-y_release);	//OK
+		
+		if(x_press < x_release && y_press < y_release)
+			gc.strokeRect(x_press,y_press,(x_release - x_press),(y_release- y_press));  //OK
 	}
 
 	@Override

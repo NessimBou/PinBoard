@@ -151,12 +151,10 @@ public class ToolSelectionTest extends ToolTest {
 		assertEquals(2, editor.getSelection().getContents().size());
 		assertTrue(editor.getSelection().getContents().contains(rect));
 		assertTrue(editor.getSelection().getContents().contains(ellipse));
-
 		tool.press(editor, makeMouseEvent(MouseEvent.MOUSE_PRESSED, 250, 150, true));
 		tool.release(editor, makeMouseEvent(MouseEvent.MOUSE_RELEASED, 250, 150, true));
 		assertEquals(1, editor.getSelection().getContents().size());
 		assertTrue(editor.getSelection().getContents().contains(rect));
-		
 		tool.press(editor, makeMouseEvent(MouseEvent.MOUSE_PRESSED, 150, 150, true));
 		tool.release(editor, makeMouseEvent(MouseEvent.MOUSE_RELEASED, 150, 150, true));
 		assertTrue(editor.getSelection().getContents().isEmpty());	

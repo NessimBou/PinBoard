@@ -4,7 +4,7 @@ import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pobj.pinboard.document.Board;
-import pobj.pinboard.editor.CommandStack;
+//import pobj.pinboard.editor.CommandStack;
 import pobj.pinboard.editor.EditorInterface;
 import pobj.pinboard.editor.Selection;
 
@@ -18,14 +18,15 @@ public class ToolTest {
 		public Board getBoard() { return board; }
 
                 // à décommenter quand Selection est définie et que getSelection est ajoutée à EditorInterface
-                //private Selection selection = new Selection();
-		//public Selection getSelection() { return selection; }
+        private Selection selection = new Selection();
+		public Selection getSelection() { return selection; }
            
                 // à décommenter quand CommandStack est définie et que getUndoStack est ajoutée à EditorInterface
 		//private CommandStack stack = new CommandStack();
 		//public CommandStack getUndoStack() { return stack; }
 
 		public Color getCurrentColor() { return Color.BLACK; }
+
 	};
 	
 	MouseEvent makeMouseEvent(EventType<MouseEvent> eventType, double x, double y, boolean shift) {

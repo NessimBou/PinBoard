@@ -1,17 +1,22 @@
 package pobj.pinboard.editor.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import pobj.pinboard.document.Clip;
 import pobj.pinboard.document.ClipRect;
 import pobj.pinboard.editor.EditorInterface;
+import pobj.pinboard.editor.Selection;
 
 public class ToolSelection implements Tool
 {
-	private double x_press ;
-	private double y_press  ;
-	private double x_release ; 
-	private double y_release ;
+	private double x_press;
+	private double y_press;
+	private double x_release; 
+	private double y_release;
 	private String name;
 	private boolean shift;
 
@@ -21,7 +26,7 @@ public class ToolSelection implements Tool
 		x_release = 0 ;
 		y_press = 0 ;
 		y_release = 0;
-		name = "ToolRect";
+		name = "ToolSelection";
 		shift=false;
 	}
 	
@@ -30,38 +35,50 @@ public class ToolSelection implements Tool
 	{
 		x_press = e.getX();
 		y_press = e.getY();
-		shift=e.isShiftDown();
+		if (e.isShiftDown())
+		{
+			i.getSelection().toogleSelect(i.getBoard(),x_press,y_press);
+			shift=true;
+		}
+		else
+		{
+			//Pour deselectionner
+			if (shift)
+			{
+				i.getSelection().clear();
+				shift=false;
+			}
+			i.getSelection().select(i.getBoard(),x_press,y_press);
+		}
 	}
-
+	
 	@Override
 	public void drag(EditorInterface i, MouseEvent e) 
 	{
 		y_release = e.getY();
 		x_release = e.getX();
-		shift=e.isShiftDown();
+		for(Clip c : i.getSelection().getContents())
+			c.move(x_release-x_press, y_release-y_press);
+		y_press = e.getY();
+		x_press = e.getX();
 	}
 	
 	@Override
 	public void release(EditorInterface i, MouseEvent e) 
 	{
-		if(x_press > x_release || y_press > y_release){
-			i.getBoard().addClip(new ClipRect(e.getX(),e.getY(),x_press,y_press,Color.BLACK));
-		}else{
-			i.getBoard().addClip(new ClipRect(x_press,y_press,e.getX(),e.getY(),Color.BLACK));
-		}
-	}
-
-	@Override
-	public void drawFeedback(EditorInterface i, GraphicsContext gc) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getName(EditorInterface editor) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
+	@Override
+	public void drawFeedback(EditorInterface i, GraphicsContext gc) 
+	{
+		i.getBoard().draw(gc);
+		i.getSelection().drawFeedBack(gc);
+	}
 
+	@Override
+	public String getName(EditorInterface editor) 
+	{
+		return name;
+	}
 }
+

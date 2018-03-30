@@ -48,12 +48,15 @@ public class ToolEllipse implements Tool {
 
 	@Override
 	public void drawFeedback(EditorInterface i, GraphicsContext gc) {
-		gc.setStroke(Color.BLACK);
-		if(x_press > x_release || y_press > y_release){
-			gc.strokeOval((x_release - x_press),(y_release - y_press),((x_press+x_release)/2) - ((x_release-x_press)/2),((y_press+y_release)/2) - ((y_release - y_press)/ 2));
-		}else{
-			gc.strokeOval(((x_press+x_release)/2) - ((x_release-x_press)/2),((y_press+y_release)/2) - ((y_release - y_press)/ 2) ,(x_release - x_press),(y_release - y_press));
-		}
+		gc.setStroke(Color.BLACK);		
+		if (x_press > x_release && y_press > y_release)
+			gc.strokeOval(((x_release+x_press)/2) - ((x_press-x_release)/2),((y_release+y_press)/2) - ((y_press - y_release)/ 2) ,(x_press - x_release),(y_press - y_release));  //OK
+		if (x_press > x_release && y_press < y_release)
+			gc.strokeOval(((x_release+x_press)/2) - ((x_press-x_release)/2),((y_press+y_release)/2) - ((y_release - y_press)/ 2) ,(x_press - x_release),(y_release - y_press));  //OK
+		if(x_press < x_release && y_press > y_release)
+			gc.strokeOval(((x_press+x_release)/2) - ((x_release-x_press)/2),((y_release+y_press)/2) - ((y_press - y_release)/ 2) ,(x_release - x_press),(y_press - y_release));  //OK
+		if(x_press < x_release && y_press < y_release)
+			gc.strokeOval(((x_press+x_release)/2) - ((x_release-x_press)/2),((y_press+y_release)/2) - ((y_release - y_press)/ 2) ,(x_release - x_press),(y_release - y_press));  //OK
 	}
 	@Override
 	public String getName(EditorInterface editor) {

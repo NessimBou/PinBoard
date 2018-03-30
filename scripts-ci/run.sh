@@ -8,12 +8,12 @@ pobj.pinboard.editor.tools.test.ToolRectTest \
 pobj.pinboard.editor.tools.test.ToolEllipseTest \
 "
 
-#TESTS_TME8="\
-#pobj.pinboard.editor.test.SelectionTest \
-#pobj.pinboard.editor.tools.test.ToolSelectionTest \
+TESTS_TME8="\
+pobj.pinboard.editor.test.SelectionTest \
+pobj.pinboard.editor.tools.test.ToolSelectionTest \
 #pobj.pinboard.editor.test.ClipboardTest \
 #pobj.pinboard.editor.test.ClipboardListenerTest \
-#"
+"
 
 #TESTS_TME9="\
 #pobj.pinboard.document.test.ClipGroupTest \
