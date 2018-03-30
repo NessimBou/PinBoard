@@ -15,59 +15,48 @@ import pobj.pinboard.editor.tools.ToolEllipse;
 import pobj.pinboard.editor.tools.ToolRect;
 import pobj.pinboard.editor.tools.ToolSelection;
 
-public class EditorWindow implements EditorInterface {
+public class EditorWindow implements EditorInterface, ClipboardListener {
 
 	private Board board;
 	private Tool tool;
 	private Selection selection;
-	//Zone de dessin
 	private final Canvas canvas = new Canvas(800,400);
+	private boolean disable;
+	private MenuItem paste = new MenuItem("Paste");
 	
 	public EditorWindow(Stage stage){
+		
+		paste.setDisable(true);
+		
+		Clipboard.getInstance().addListener(this);
 		board = new Board();
 		selection = new Selection ();
-		
-		//Liste des menus et sous-menu
 		Menu file = new Menu("File");
-		
 		MenuItem nouveau = new MenuItem("New");
 		MenuItem fermer = new MenuItem("Close");
-		
-		
 		file.getItems().addAll(nouveau,fermer);
 		
-		
 		Menu Edit = new Menu("Edit");
-		
 		MenuItem rectangle = new MenuItem("Rectangle");
 		MenuItem Ellipse = new MenuItem("Ellipse");
+		MenuItem copy = new MenuItem("Copy");
 		
-		
-		Edit.getItems().addAll(rectangle,Ellipse);
+		MenuItem delete = new MenuItem("Delete");
+		Edit.getItems().addAll(rectangle,Ellipse,copy,paste,delete);
 		
 		Menu tools = new Menu("Tools");
 		MenuItem tool_select = new MenuItem("Selection");
 		tools.getItems().addAll(tool_select);
-		
-		//Barre de menu
 		MenuBar menubar = new MenuBar(file,Edit,tools);
 		
-		//Liste des boutons
+		//Boutons
 		Button box = new Button("box");
 		Button ellipse = new Button("Ellipse");
 		Button img = new Button("Img");
 		Button select = new Button("Select");
-		
-		
-		//Barre de Bouton
 		ToolBar toolbar = new ToolBar(select,box,ellipse,img);
 		
-		
-		
-		//Separator
 		Separator separator = new Separator();
-		
-		//Label
 		Label label = new Label();
 		
 		//Fonction Annonyme
@@ -119,7 +108,7 @@ public class EditorWindow implements EditorInterface {
 		{
 			tool = new ToolRect();
 			String name=tool.getName(this);
-			Label bds2= new Label(name);
+			Label bds2= new Label("copy");
 			VBox vbox1 = new VBox();
 			vbox1.getChildren().addAll(menubar,toolbar,canvas,separator,bds2);
 			stage.setScene(new javafx.scene.Scene(vbox1));
@@ -133,6 +122,26 @@ public class EditorWindow implements EditorInterface {
 			vbox1.getChildren().addAll(menubar,toolbar,canvas,separator,bds2);
 			stage.setScene(new javafx.scene.Scene(vbox1));
 		});
+		
+		copy.setOnAction((e) ->
+		{ 
+			Clipboard.getInstance().copyToClipboard(selection.getContents());
+			clipboardChanged();
+		});
+		
+		paste.setOnAction((e) ->
+		{
+			board.addClip(Clipboard.getInstance().copyFromClipboard());
+			clipboardChanged();
+		});
+		
+		delete.setOnAction((e) ->
+		{ 
+			board.removeClip(selection.getContents());
+			clipboardChanged();
+		});
+		
+		
 		
 		EventHandler<MouseEvent> drag=new EventHandler<MouseEvent>() {
 			@Override
@@ -160,27 +169,15 @@ public class EditorWindow implements EditorInterface {
 	           }
 	    };
 	    
-	    
-//		
-//		canvas.setOnMousePressed(press);
-//		canvas.setOnMouseDragged(drag);
-//		canvas.setOnMouseReleased(released);
-//		
-	    
 	    canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,drag);
 	    canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, press);
 	    canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, released);
-	    
-	    
-	    
 		stage.setTitle("Titre");
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(menubar,toolbar,canvas,separator,label);
 		Scene scene = new Scene(vbox);
 		stage.setScene(scene);
 		stage.show();
-	
-	
 		
 	}
 	
@@ -204,6 +201,13 @@ public class EditorWindow implements EditorInterface {
 	{
 		return selection;
 	}
-	
 
+	@Override
+	public void clipboardChanged() 
+	{
+		if ((Clipboard.getInstance().isEmpty())||(selection.getContents().isEmpty()))
+			paste.setDisable(true);
+		else
+			paste.setDisable(false);
+	}
 }

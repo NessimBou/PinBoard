@@ -11,8 +11,8 @@ pobj.pinboard.editor.tools.test.ToolEllipseTest \
 TESTS_TME8="\
 pobj.pinboard.editor.test.SelectionTest \
 pobj.pinboard.editor.tools.test.ToolSelectionTest \
-#pobj.pinboard.editor.test.ClipboardTest \
-#pobj.pinboard.editor.test.ClipboardListenerTest \
+pobj.pinboard.editor.test.ClipboardTest \
+pobj.pinboard.editor.test.ClipboardListenerTest \
 "
 
 #TESTS_TME9="\
