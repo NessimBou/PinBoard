@@ -10,8 +10,6 @@ public abstract class AbstractClip {
 	private double bottom;
 	private Color color;
 	
-
-	
 	public double getTop() {
 		return top; 
 	}
@@ -79,6 +77,9 @@ public abstract class AbstractClip {
 		}
 		return true;
 	}
+	
+	
+	
 
 }
 

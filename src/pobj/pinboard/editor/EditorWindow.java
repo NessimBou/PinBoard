@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pobj.pinboard.document.Board;
 import pobj.pinboard.document.Clip;
+import pobj.pinboard.document.ClipGroup;
 import pobj.pinboard.editor.tools.Tool;
 import pobj.pinboard.editor.tools.ToolEllipse;
 import pobj.pinboard.editor.tools.ToolRect;
@@ -40,9 +41,11 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 		MenuItem rectangle = new MenuItem("Rectangle");
 		MenuItem Ellipse = new MenuItem("Ellipse");
 		MenuItem copy = new MenuItem("Copy");
-		
 		MenuItem delete = new MenuItem("Delete");
-		Edit.getItems().addAll(rectangle,Ellipse,copy,paste,delete);
+		MenuItem group = new MenuItem("Group");
+		MenuItem ungroup = new MenuItem("Ungroup");
+		
+		Edit.getItems().addAll(rectangle,Ellipse,copy,paste,delete,group,ungroup);
 		
 		Menu tools = new Menu("Tools");
 		MenuItem tool_select = new MenuItem("Selection");
@@ -55,6 +58,7 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 		Button img = new Button("Img");
 		Button select = new Button("Select");
 		ToolBar toolbar = new ToolBar(select,box,ellipse,img);
+		
 		
 		Separator separator = new Separator();
 		Label label = new Label();
@@ -140,6 +144,31 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 			board.removeClip(selection.getContents());
 			clipboardChanged();
 		});
+		
+		group.setOnAction((e) ->
+		{ 
+			ClipGroup cg= new ClipGroup();
+			for (Clip cs : selection.getContents())
+				cg.addClip(cs);
+			board.removeClip(selection.getContents());
+			board.addClip(cg);			
+			clipboardChanged();
+		});
+		
+		
+		// A CODER // DBUG
+		ungroup.setOnAction((e) ->
+		{ 
+			board.removeClip(selection.getContents());
+			for (Clip cb : getBoard().getContents())
+			{
+			}
+			board.removeClip(selection.getContents());
+			board.addClip(cg);			
+			clipboardChanged();
+		});
+		
+		
 		
 		
 		
