@@ -74,28 +74,16 @@ public class ClipGroup extends AbstractClip implements Composite{
 	@Override
 	public void setGeometry(double left, double top, double right, double bottom) 
 	{
-		double x=0;
-		double y=0;
-		
-		if (left > right)
-			x=left-right;
-		if (left<=left)
-			x=right-left;
-		
-		if (top > bottom)
-			y=top-bottom;
-		if (bottom<=top)
-			y=bottom-top;
-		
-		for (Clip c : clip)
-		{
-			c.move(x,y);
-		}
+		this.setLeft(left);
+		this.setTop(top);
+		this.setRight(right);
+		this.setBottom(bottom);
 	}
 	
 	@Override
 	public void move(double x, double y) 
 	{
+		setGeometry(getLeft()+x, getTop()+y, getRight()+x, getBottom()+y);
 		for (Clip c : clip)
 			c.move(x,y);
 	}
@@ -103,14 +91,9 @@ public class ClipGroup extends AbstractClip implements Composite{
 	@Override
 	public boolean isSelected(double x, double y) 
 	{
-		boolean b=true;
-		for (Clip c : clip)
-		{
-			b=c.isSelected(x,y);
-			if (!b)
-				return false;
-		}
-		return true;
+		if (x>getLeft() && x<getRight() && y>getTop() && y<getBottom())
+			return true;
+		return false;
 	}
 
 	@Override
@@ -139,12 +122,24 @@ public class ClipGroup extends AbstractClip implements Composite{
 	public void addClip(Clip toAdd) 
 	{
 		clip.add(toAdd);
+		//Pour redéfinir le carré englobant
+		double left=getLeft(); 
+		double top=getTop();
+		double right=getRight();
+		double bottom=getBottom();
+		setGeometry(left, top,right, bottom);
 	}
 
 	@Override
 	public void removeClip(Clip toRemove) 
 	{
 		clip.remove(toRemove);
+		//Pour redéfinir le carré englobant
+		double left=getLeft(); 
+		double top=getTop();
+		double right=getRight();
+		double bottom=getBottom();
+		setGeometry(left, top,right, bottom);
 	}
 
 }
