@@ -4,6 +4,7 @@ import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pobj.pinboard.document.Board;
+import pobj.pinboard.editor.CommandStack;
 //import pobj.pinboard.editor.CommandStack;
 import pobj.pinboard.editor.EditorInterface;
 import pobj.pinboard.editor.Selection;
@@ -13,7 +14,8 @@ import pobj.pinboard.editor.Selection;
 public class ToolTest {
 
 	class MockEditor implements EditorInterface {
-           
+        
+		private CommandStack cs = new CommandStack();
 		private Board board = new Board();
 		public Board getBoard() { return board; }
 
@@ -22,10 +24,21 @@ public class ToolTest {
 		public Selection getSelection() { return selection; }
            
                 // à décommenter quand CommandStack est définie et que getUndoStack est ajoutée à EditorInterface
-		//private CommandStack stack = new CommandStack();
-		//public CommandStack getUndoStack() { return stack; }
+		private CommandStack stack = new CommandStack();
+		public CommandStack getUndoStack() { return stack; }
 
 		public Color getCurrentColor() { return Color.BLACK; }
+
+		@Override
+		public CommandStack getRedoStack() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CommandStack getCommandStack() {
+			return cs;
+		}
 
 	};
 	

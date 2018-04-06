@@ -6,6 +6,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pobj.pinboard.document.ClipEllipse;
 import pobj.pinboard.editor.EditorInterface;
+import pobj.pinboard.editor.commands.Command;
+import pobj.pinboard.editor.commands.CommandAdd;
 
 public class ToolEllipse implements Tool {
 
@@ -39,10 +41,15 @@ public class ToolEllipse implements Tool {
 	@Override
 	public void release(EditorInterface i, MouseEvent e) {
 		if(x_press > x_release || y_press > y_release){
-			i.getBoard().addClip(new ClipEllipse(e.getX(), e.getY(),x_press, y_press,  Color.RED));
+			Command c=new CommandAdd(i,new ClipEllipse(e.getX(), e.getY(),x_press, y_press,  Color.RED));
+			i.getCommandStack().addCommand(c);
+			c.execute();
+			//i.getBoard().addClip(new ClipEllipse(e.getX(), e.getY(),x_press, y_press,  Color.RED));
 		}else{
-			
-			i.getBoard().addClip(new ClipEllipse(x_press, y_press, e.getX(), e.getY(), Color.RED));
+			Command c=new CommandAdd(i,new ClipEllipse(x_press, y_press, e.getX(), e.getY(), Color.RED));
+			i.getCommandStack().addCommand(c);
+			c.execute();
+			//i.getBoard().addClip(new ClipEllipse(x_press, y_press, e.getX(), e.getY(), Color.RED));
 		}
 	}
 

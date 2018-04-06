@@ -1,15 +1,11 @@
 package pobj.pinboard.editor.tools;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import pobj.pinboard.document.Clip;
-import pobj.pinboard.document.ClipRect;
 import pobj.pinboard.editor.EditorInterface;
-import pobj.pinboard.editor.Selection;
+import pobj.pinboard.editor.commands.Command;
+import pobj.pinboard.editor.commands.CommandMove;
 
 public class ToolSelection implements Tool
 {
@@ -58,7 +54,12 @@ public class ToolSelection implements Tool
 		y_release = e.getY();
 		x_release = e.getX();
 		for(Clip c : i.getSelection().getContents())
-			c.move(x_release-x_press, y_release-y_press);
+		{
+			Command co = new CommandMove(i,c,x_release-x_press,y_release-y_press);
+			co.execute();
+			i.getCommandStack().addCommand(co);
+			//c.move(x_release-x_press, y_release-y_press);
+		}
 		y_press = e.getY();
 		x_press = e.getX();
 	}

@@ -15,14 +15,14 @@ pobj.pinboard.editor.test.ClipboardTest \
 pobj.pinboard.editor.test.ClipboardListenerTest \
 "
 
-#TESTS_TME9="\
-#pobj.pinboard.document.test.ClipGroupTest \
-#pobj.pinboard.editor.commands.test.CommandAddTest \
-#pobj.pinboard.editor.commands.test.CommandMoveTest \
-#pobj.pinboard.editor.commands.test.CommandGroupTest \
-#pobj.pinboard.editor.commands.test.CommandUngroupTest \
-#pobj.pinboard.editor.test.CommandStackTest \
-#"
+TESTS_TME9="\
+pobj.pinboard.document.test.ClipGroupTest \
+pobj.pinboard.editor.commands.test.CommandAddTest \
+pobj.pinboard.editor.commands.test.CommandMoveTest \
+pobj.pinboard.editor.commands.test.CommandGroupTest \
+pobj.pinboard.editor.commands.test.CommandUngroupTest \
+pobj.pinboard.editor.test.CommandStackTest \
+"
 
 TESTS="$TESTS_TME7 $TESTS_TME8 $TESTS_TME9"
 

@@ -5,6 +5,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pobj.pinboard.document.ClipRect;
 import pobj.pinboard.editor.EditorInterface;
+import pobj.pinboard.editor.commands.Command;
+import pobj.pinboard.editor.commands.CommandAdd;
 
 public class ToolRect implements Tool {
 	
@@ -38,9 +40,15 @@ public class ToolRect implements Tool {
 	@Override
 	public void release(EditorInterface i, MouseEvent e) {
 		if(x_press > x_release || y_press > y_release){
-			i.getBoard().addClip(new ClipRect(e.getX(),e.getY(),x_press,y_press,Color.BLACK));
+			Command c=new CommandAdd(i,new ClipRect(e.getX(),e.getY(),x_press,y_press,Color.BLACK));
+			c.execute();
+			i.getCommandStack().addCommand(c);
+			//i.getBoard().addClip(new ClipRect(e.getX(),e.getY(),x_press,y_press,Color.BLACK));
 		}else{
-			i.getBoard().addClip(new ClipRect(x_press,y_press,e.getX(),e.getY(),Color.BLACK));
+			Command c=new CommandAdd(i,new ClipRect(x_press,y_press,e.getX(),e.getY(),Color.BLACK));
+			c.execute();
+			i.getCommandStack().addCommand(c);
+			//i.getBoard().addClip(new ClipRect(x_press,y_press,e.getX(),e.getY(),Color.BLACK));
 		}
 	}
 

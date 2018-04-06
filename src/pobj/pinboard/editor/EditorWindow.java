@@ -9,8 +9,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pobj.pinboard.document.Board;
-import pobj.pinboard.document.Clip;
-import pobj.pinboard.document.ClipGroup;
+import pobj.pinboard.editor.commands.Command;
+import pobj.pinboard.editor.commands.CommandGroup;
+import pobj.pinboard.editor.commands.CommandUngroup;
 import pobj.pinboard.editor.tools.Tool;
 import pobj.pinboard.editor.tools.ToolEllipse;
 import pobj.pinboard.editor.tools.ToolRect;
@@ -22,11 +23,12 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 	private Tool tool;
 	private Selection selection;
 	private final Canvas canvas = new Canvas(800,400);
-	private boolean disable;
 	private MenuItem paste = new MenuItem("Paste");
+	private CommandStack cs;
 	
-	public EditorWindow(Stage stage){
-		
+	public EditorWindow(Stage stage)
+	{
+		cs= new CommandStack();
 		paste.setDisable(true);
 		
 		Clipboard.getInstance().addListener(this);
@@ -44,8 +46,10 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 		MenuItem delete = new MenuItem("Delete");
 		MenuItem group = new MenuItem("Group");
 		MenuItem ungroup = new MenuItem("Ungroup");
+		MenuItem undo = new MenuItem("Undo");
+		MenuItem redo = new MenuItem("Redo");
 		
-		Edit.getItems().addAll(rectangle,Ellipse,copy,paste,delete,group,ungroup);
+		Edit.getItems().addAll(rectangle,Ellipse,copy,paste,delete,group,ungroup,undo,redo);
 		
 		Menu tools = new Menu("Tools");
 		MenuItem tool_select = new MenuItem("Selection");
@@ -64,6 +68,18 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 		Label label = new Label();
 		
 		//Fonction Annonyme
+		undo.setOnAction((e) ->
+		{
+			cs.undo();
+			clipboardChanged();
+		});
+		
+		redo.setOnAction((e) ->
+		{
+			cs.redo();
+			clipboardChanged();
+		});
+		
 		nouveau.setOnAction((e) -> { new EditorWindow(new Stage());});
 		fermer.setOnAction((e) -> { stage.close();});
 		
@@ -112,7 +128,7 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 		{
 			tool = new ToolRect();
 			String name=tool.getName(this);
-			Label bds2= new Label("copy");
+			Label bds2= new Label(name);
 			VBox vbox1 = new VBox();
 			vbox1.getChildren().addAll(menubar,toolbar,canvas,separator,bds2);
 			stage.setScene(new javafx.scene.Scene(vbox1));
@@ -144,33 +160,22 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 			board.removeClip(selection.getContents());
 			clipboardChanged();
 		});
-		
+
 		group.setOnAction((e) ->
 		{ 
-			ClipGroup cg= new ClipGroup();
-			for (Clip cs : selection.getContents())
-				cg.addClip(cs);
-			board.removeClip(selection.getContents());
-			board.addClip(cg);			
+			Command c = new CommandGroup(this, selection.getContents());
+			c.execute();
+			cs.addCommand(c);
 			clipboardChanged();
 		});
 		
-		
-		// A CODER // DBUG
 		ungroup.setOnAction((e) ->
 		{ 
-			board.removeClip(selection.getContents());
-			for (Clip cb : getBoard().getContents())
-			{
-			}
-			board.removeClip(selection.getContents());
-			board.addClip(cg);			
+			Command c = new CommandUngroup(this, selection.getContents());
+			c.execute();
+			cs.addCommand(c);
 			clipboardChanged();
 		});
-		
-		
-		
-		
 		
 		EventHandler<MouseEvent> drag=new EventHandler<MouseEvent>() {
 			@Override
@@ -238,5 +243,22 @@ public class EditorWindow implements EditorInterface, ClipboardListener {
 			paste.setDisable(true);
 		else
 			paste.setDisable(false);
+	}
+
+	@Override
+	public CommandStack getUndoStack() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CommandStack getRedoStack() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public CommandStack getCommandStack()
+	{
+		return cs;
 	}
 }
